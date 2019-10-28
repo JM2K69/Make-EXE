@@ -79,10 +79,6 @@ namespace Make_EXE
                 }
             }
             InitializeComponent();
-            WPF_Auto_Update.Updater.RemoteFileURI = "https://translucency.azurewebsites.net/Downloads/" + WPF_Auto_Update.Updater.FileName;
-            WPF_Auto_Update.Updater.ServiceURI = "https://translucency.azurewebsites.net/Services/VersionCheck.cshtml?Path=/Downloads/" + WPF_Auto_Update.Updater.FileName;
-            WPF_Auto_Update.Updater.UpdateTimeout = Duration.Forever;
-            WPF_Auto_Update.Updater.CheckCommandLineArgs();
         }
 
         private void Current_DispatcherUnhandledException(Object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
@@ -109,7 +105,6 @@ namespace Make_EXE
         
         private void Window_Loaded(Object sender, RoutedEventArgs e)
         {
-            WPF_Auto_Update.Updater.CheckForUpdates(true);
             if (targetPath != null)
             {
                 this.Hide();
