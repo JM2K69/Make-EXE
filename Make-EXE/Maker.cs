@@ -59,44 +59,43 @@ namespace Make_EXE
                 }
                 count++;
             }
+
+            var arguments = "";
+            foreach (var arg in args)
+            {
+                arguments = arguments + " \"" + arg + "\"";
+            }
             Console.WriteLine("Starting up...");
+
+            var psi = new ProcessStartInfo();
+            psi.UseShellExecute = false;
+            psi.WorkingDirectory = workingDir;
+
+            if (Path.GetExtension(resources[0]).ToLower() == ".ps1")
+            {
+                psi.FileName = "powershell.exe";
+                psi.Arguments = "-executionpolicy bypass -file \"" + resources[0] + "\"" + arguments;
+            }
+            else if (Path.GetExtension(resources[0]).ToLower() == ".bat")
+            {
+                psi.FileName = "cmd.exe";
+                psi.Arguments = "/c \"\"" + resources[0] + "\"" + arguments + "\"";
+            }
+
             if (redirect)
             {
-                var psi = new ProcessStartInfo();
                 var proc = new Process();
                 proc.EnableRaisingEvents = true;
                 proc.StartInfo = psi;
-                psi.UseShellExecute = false;
                 psi.RedirectStandardOutput = true;
-                if (Path.GetExtension(resources[0]).ToLower() == ".ps1")
-                {
-                    psi.FileName = "powershell.exe";
-                    psi.Arguments = "-executionpolicy bypass -file \"" + workingDir + resources[0] + "\"";
-                    proc.Start();
-                    proc.WaitForExit();
-                    Console.WriteLine(proc.StandardOutput.ReadToEnd());
-                }
-                else if (Path.GetExtension(resources[0]).ToLower() == ".bat")
-                {
-                    psi.FileName = "cmd.exe";
-                    psi.Arguments = "/c \"" + workingDir + resources[0] + "\"";
-                    proc.Start();
-                    proc.WaitForExit();
-                    Console.WriteLine(proc.StandardOutput.ReadToEnd());
-                }
+                proc.Start();
+                proc.WaitForExit();
+                Console.WriteLine(proc.StandardOutput.ReadToEnd());
             }
             else
             {
-                if (Path.GetExtension(resources[0]).ToLower() == ".ps1")
-                {
-                    System.Diagnostics.Process.Start("powershell.exe", "-executionpolicy bypass -file \"" + workingDir + resources[0] + "\"");
-                }
-                else if (Path.GetExtension(resources[0]).ToLower() == ".bat")
-                {
-                    System.Diagnostics.Process.Start("cmd.exe", "/c \"" + workingDir + resources[0] + "\"");
-                }
+                System.Diagnostics.Process.Start(psi);
             }
-            
         }
     }
 }
