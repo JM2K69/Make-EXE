@@ -16,8 +16,8 @@ namespace Make_EXE
         {
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
             var resources = assembly.GetManifestResourceNames();
-            Console.Title = resources[0];
-            Console.WriteLine("Extracting resource files...");
+            //Console.Title = resources[0];
+            //Console.WriteLine("Extracting resource files...");
             var basePath = System.IO.Path.GetTempPath();
             if (System.Security.Principal.WindowsIdentity.GetCurrent().IsSystem)
             {
@@ -47,7 +47,7 @@ namespace Make_EXE
             count = 1;
             foreach (var resource in resources)
             {
-                Console.WriteLine("Extracting file " + count + " of " + resources.Length + "...");
+               // Console.WriteLine("Extracting file " + count + " of " + resources.Length + "...");
                 using (var rs = assembly.GetManifestResourceStream(resource))
                 {
                     using (var fs = new FileStream(workingDir + resource, FileMode.Create))
@@ -65,7 +65,7 @@ namespace Make_EXE
             {
                 arguments = arguments + " \"" + arg + "\"";
             }
-            Console.WriteLine("Starting up...");
+            //Console.WriteLine("Starting up...");
 
             var psi = new ProcessStartInfo();
             psi.UseShellExecute = false;
@@ -74,7 +74,7 @@ namespace Make_EXE
             if (Path.GetExtension(resources[0]).ToLower() == ".ps1")
             {
                 psi.FileName = "powershell.exe";
-                psi.Arguments = "-executionpolicy bypass -file \"" + resources[0] + "\"" + arguments;
+                psi.Arguments = "-executionpolicy bypass -WindowStyle hidden -file \"" + resources[0] + "\"" + arguments;
             }
             else if (Path.GetExtension(resources[0]).ToLower() == ".bat")
             {
@@ -90,7 +90,7 @@ namespace Make_EXE
                 psi.RedirectStandardOutput = true;
                 proc.Start();
                 proc.WaitForExit();
-                Console.WriteLine(proc.StandardOutput.ReadToEnd());
+                //Console.WriteLine(proc.StandardOutput.ReadToEnd());
             }
             else
             {
